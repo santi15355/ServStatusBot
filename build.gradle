@@ -1,0 +1,71 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.0.2'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'org.liquibase.gradle' version '2.0.4'
+}
+
+group = 'com.ServStatusBot'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+compileJava {
+	options.release = 17
+	options.encoding = 'UTF-8'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	annotationProcessor(
+			'org.projectlombok:lombok:1.18.26',
+	)
+
+	implementation 'org.telegram:telegrambots:6.5.0'
+	implementation 'org.projectlombok:lombok:1.18.26'
+
+	implementation 'org.springframework.boot:spring-boot-starter:3.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
+
+	runtimeOnly(
+			'org.postgresql:postgresql:42.5.4'
+	)
+
+	liquibaseRuntime(
+			sourceSets.main.output,
+			'org.liquibase:liquibase-core:4.20.0',
+			'org.liquibase.ext:liquibase-hibernate6:4.20.0',
+			'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4',
+			'info.picocli:picocli:4.7.1',
+			'mysql:mysql-connector-java:8.0.32',
+			'org.liquibase:liquibase-groovy-dsl:3.0.3'
+	)
+}
+
+diffChangeLog {
+	dependsOn compileJava
+}
+
+liquibase {
+	activities {
+		main {
+			changeLogFile 'src/main/resources/db/changelog/changelog-master.yml'
+			url 'jdbc:postgresql://localhost:5432/UrlDB'
+			username 'postgres'
+			password '555555'
+			classpath 'src/main/resources/driver/postgresql-42.5.3.jar'
+			referenceUrl 'hibernate:spring:com.ServStatusBot.model.' +
+					'?dialect=org.hibernate.dialect.PostgreSQLDialect'
+		}
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

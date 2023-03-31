@@ -1,0 +1,542 @@
+databaseChangeLog:
+- changeSet:
+    id: 1678844429119-2
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: Url
+- changeSet:
+    id: 1678844429119-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: Url
+- changeSet:
+    id: 1678844429119-4
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: url
+- changeSet:
+    id: 1678844429119-5
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: url
+- changeSet:
+    id: 1678844429119-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: Url
+
+databaseChangeLog:
+- changeSet:
+    id: 1678844541976-2
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: Url
+- changeSet:
+    id: 1678844541976-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: Url
+- changeSet:
+    id: 1678844541976-4
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: url
+- changeSet:
+    id: 1678844541976-5
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: url
+- changeSet:
+    id: 1678844541976-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: Url
+
+databaseChangeLog:
+- changeSet:
+    id: 1680294512618-2
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: chatId
+            type: bigint
+        tableName: Url
+- changeSet:
+    id: 1680294512618-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: Url
+- changeSet:
+    id: 1680294512618-4
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: interval
+            type: bigint
+        tableName: Url
+- changeSet:
+    id: 1680294512618-5
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: Url
+- changeSet:
+    id: 1680294512618-6
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: url
+- changeSet:
+    id: 1680294512618-7
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: url
+- changeSet:
+    id: 1680294512618-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: Url
+
+databaseChangeLog:
+- changeSet:
+    id: 1680294578200-2
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: chatId
+            type: bigint
+        tableName: Url
+- changeSet:
+    id: 1680294578200-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: Url
+- changeSet:
+    id: 1680294578200-4
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: interval
+            type: bigint
+        tableName: Url
+- changeSet:
+    id: 1680294578200-5
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: Url
+- changeSet:
+    id: 1680294578200-6
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: url
+- changeSet:
+    id: 1680294578200-7
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: url
+- changeSet:
+    id: 1680294578200-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: Url
+
+databaseChangeLog:
+- changeSet:
+    id: 1680296642446-1
+    author: xonfee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: UserPK
+            name: id
+            type: BIGINT
+        - column:
+            name: chatId
+            type: BIGINT
+        - column:
+            name: createdAt
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: interval
+            type: BIGINT
+        - column:
+            name: userLink
+            type: OID
+        tableName: User
+- changeSet:
+    id: 1680296642446-2
+    author: xonfee (generated)
+    changes:
+    - dropTable:
+        tableName: url
+
+databaseChangeLog:
+- changeSet:
+    id: 1680296665073-1
+    author: xonfee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: UserPK
+            name: id
+            type: BIGINT
+        - column:
+            name: chatId
+            type: BIGINT
+        - column:
+            name: createdAt
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: interval
+            type: BIGINT
+        - column:
+            name: userLink
+            type: OID
+        tableName: User
+- changeSet:
+    id: 1680296665073-2
+    author: xonfee (generated)
+    changes:
+    - dropTable:
+        tableName: url
+
+databaseChangeLog:
+- changeSet:
+    id: 1680297055172-1
+    author: xonfee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: UserPK
+            name: id
+            type: BIGINT
+        - column:
+            name: chatId
+            type: BIGINT
+        - column:
+            name: createdAt
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: interval
+            type: BIGINT
+        - column:
+            name: userLink
+            type: OID
+        tableName: User
+
+databaseChangeLog:
+- changeSet:
+    id: 1680297683800-1
+    author: xonfee (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            autoIncrement: true
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: usersPK
+            name: id
+            type: BIGINT
+        - column:
+            name: chatId
+            type: BIGINT
+        - column:
+            name: createdAt
+            type: TIMESTAMP(6) WITHOUT TIME ZONE
+        - column:
+            name: interval
+            type: BIGINT
+        - column:
+            name: userLink
+            type: OID
+        tableName: users
+
+databaseChangeLog:
+- changeSet:
+    id: 1680298937297-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: chatId
+            type: bigint
+        tableName: users
+- changeSet:
+    id: 1680298937297-4
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: users
+- changeSet:
+    id: 1680298937297-5
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: users
+- changeSet:
+    id: 1680298937297-6
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: chat_id
+        tableName: users
+- changeSet:
+    id: 1680298937297-7
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: users
+- changeSet:
+    id: 1680298937297-8
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: users
+- changeSet:
+    id: 1680298937297-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: users
+- changeSet:
+    id: 1680298937297-2
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: interval
+        newDataType: bigint
+        tableName: users
+
+databaseChangeLog:
+- changeSet:
+    id: 1680300709103-4
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: users
+- changeSet:
+    id: 1680300709103-5
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: users
+- changeSet:
+    id: 1680300709103-6
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: users
+- changeSet:
+    id: 1680300709103-7
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: users
+- changeSet:
+    id: 1680300709103-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: chat_id
+        newDataType: bigint
+        tableName: users
+- changeSet:
+    id: 1680300709103-2
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: users
+- changeSet:
+    id: 1680300709103-3
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: interval
+        newDataType: bigint
+        tableName: users
+
+databaseChangeLog:
+- changeSet:
+    id: 1680300847910-3
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: chatId
+            type: bigint
+        tableName: users
+- changeSet:
+    id: 1680300847910-4
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: createdAt
+            type: timestamp(6)
+        tableName: users
+- changeSet:
+    id: 1680300847910-5
+    author: xonfee (generated)
+    changes:
+    - addColumn:
+        columns:
+        - column:
+            name: userLink
+            type: oid
+        tableName: users
+- changeSet:
+    id: 1680300847910-6
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: chat_id
+        tableName: users
+- changeSet:
+    id: 1680300847910-7
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: users
+- changeSet:
+    id: 1680300847910-8
+    author: xonfee (generated)
+    changes:
+    - dropColumn:
+        columnName: user_link
+        tableName: users
+- changeSet:
+    id: 1680300847910-1
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: id
+        newDataType: bigint
+        tableName: users
+- changeSet:
+    id: 1680300847910-2
+    author: xonfee (generated)
+    changes:
+    - modifyDataType:
+        columnName: interval
+        newDataType: bigint
+        tableName: users
+
