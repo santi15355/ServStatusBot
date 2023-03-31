@@ -18,17 +18,17 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 @PropertySource("classpath:application.yml")
 public class TelegramBot extends TelegramLongPollingBot {
 
-    //public static Long interval = Long.valueOf("{timer}");
-
     private final BotConfig botConfig;
-    //private static Integer timer = 0;
 
     @Autowired
     private final UserService userService;
@@ -55,9 +55,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (command.equals("старт")) {
                 sendMessage(chatId, "Введите добавить адрес интервал проверки в секундах");
-            }
-
-            if (command.contains("добавить")) {
+            } else if (command.contains("добавить")) {
                 List<String> words = List.of(update.getMessage().getText().split(" "));
                 User user = new User();
                 user.setUserLink(words.get(1));
@@ -65,10 +63,14 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setInterval(Long.valueOf(words.get(2)));
                 userService.saveUser(user);
 
-            }
-
-            if (command.equals("показать")) {
-                sendMessage(chatId, String.valueOf(userRepository.findByChatId(chatId)));
+            } else if (command.equals("показать")) {
+                Map<String, Long> result = new HashMap<>();
+                int size = userRepository.findAllByChatId(chatId).size();
+                for (var i = 0; i < size; i++) {
+                    result.put(userRepository.findAllByChatId(chatId).get(i).getUserLink(),
+                            userRepository.findAllByChatId(chatId).get(i).getInterval());
+                }
+                sendMessage(chatId, String.valueOf(result));
             } else {
                 sendMessage(chatId, "Ты пишешь какую-то дичь");
             }
