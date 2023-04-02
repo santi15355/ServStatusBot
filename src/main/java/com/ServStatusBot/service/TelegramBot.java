@@ -1,14 +1,13 @@
 package com.ServStatusBot.service;
 
 import com.ServStatusBot.config.BotConfig;
+import com.ServStatusBot.model.Url;
 import com.ServStatusBot.model.User;
-import com.ServStatusBot.reposiroty.UserRepository;
+import com.ServStatusBot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,7 +17,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,17 +57,20 @@ public class TelegramBot extends TelegramLongPollingBot {
             } else if (command.contains("добавить")) {
                 List<String> words = List.of(update.getMessage().getText().split(" "));
                 User user = new User();
-                user.setUserLink(words.get(1));
+                Url url = new Url();
+                url.setUrl(words.get(1));
+                url.setInterval(Long.valueOf(words.get(2)));
                 user.setChatId(update.getMessage().getChatId());
-                user.setInterval(Long.valueOf(words.get(2)));
+                user.setUrl(Collections.singletonList(url));
+                user.setUserName(update.getMessage().getChat().getFirstName());
                 userService.saveUser(user);
 
             } else if (command.equals("показать")) {
+                List<User> users = userRepository.findAllByChatId(chatId);
                 Map<String, Long> result = new HashMap<>();
                 int size = userRepository.findAllByChatId(chatId).size();
-                for (var i = 0; i < size; i++) {
-                    result.put(userRepository.findAllByChatId(chatId).get(i).getUserLink(),
-                            userRepository.findAllByChatId(chatId).get(i).getInterval());
+                for (User user : users) {
+                    result.put(user.getUrl().get(0).getUrl(), user.getUrl().get(0).getInterval());
                 }
                 sendMessage(chatId, String.valueOf(result));
             } else {

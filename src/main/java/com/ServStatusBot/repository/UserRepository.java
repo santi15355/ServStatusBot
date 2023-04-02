@@ -1,4 +1,4 @@
-package com.ServStatusBot.reposiroty;
+package com.ServStatusBot.repository;
 
 import com.ServStatusBot.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +10,5 @@ import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
-    //Optional<User> findAllByChatId(Long chatId);
     List<User> findAllByChatId(Long chatId);
 }

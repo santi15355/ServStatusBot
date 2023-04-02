@@ -29,7 +29,7 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter:3.0.4'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.4'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.4'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
 
@@ -48,6 +48,7 @@ dependencies {
 	)
 }
 
+
 diffChangeLog {
 	dependsOn compileJava
 }
@@ -61,10 +62,12 @@ liquibase {
 			password '555555'
 			classpath 'src/main/resources/driver/postgresql-42.5.3.jar'
 			referenceUrl 'hibernate:spring:com.ServStatusBot.model.' +
-					'?dialect=org.hibernate.dialect.PostgreSQLDialect'
+					'?dialect=org.hibernate.dialect.PostgreSQLDialect' +
+					'&hibernate.id.db_structure_naming_strategy=single'
 		}
 	}
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()

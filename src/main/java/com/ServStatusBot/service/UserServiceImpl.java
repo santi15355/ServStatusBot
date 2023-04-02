@@ -1,7 +1,7 @@
 package com.ServStatusBot.service;
 
 import com.ServStatusBot.model.User;
-import com.ServStatusBot.reposiroty.UserRepository;
+import com.ServStatusBot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
