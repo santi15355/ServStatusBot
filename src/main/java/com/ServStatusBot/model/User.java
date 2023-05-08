@@ -22,14 +22,14 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 public class User {
 
     @Id
-    @NotNull
     private Long chatId;
 
     @NotNull
     private String userName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Url> url;
+    @JoinColumn(name = "user_id")
+    private List<Url> urls;
 
     @CreationTimestamp
     @Temporal(TIMESTAMP)

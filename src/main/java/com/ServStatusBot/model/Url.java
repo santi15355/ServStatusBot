@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarcharJdbcType;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,9 @@ public class Url {
     @NotNull
     @JdbcType(VarcharJdbcType.class)
     private String url;
+
+    /*@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private User user;*/
 
     @NotNull
     private Long interval;
