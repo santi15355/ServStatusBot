@@ -19,7 +19,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -94,6 +97,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     result.put(url.getUrl(), url.getInterval());
                 }
                 sendMessage(chatId, String.valueOf(result));
+
             } else if (command.contains("проверить")) {
                 String url = userText.get(1);
                 isUrlWorks(chatId, url);
