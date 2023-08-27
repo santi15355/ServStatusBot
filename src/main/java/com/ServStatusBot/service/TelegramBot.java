@@ -1,47 +1,46 @@
 package com.ServStatusBot.service;
 
+import com.ServStatusBot.Utils;
 import com.ServStatusBot.config.BotConfig;
+import com.ServStatusBot.config.SSLVerificationDisabler;
 import com.ServStatusBot.model.Url;
-import com.ServStatusBot.model.User;
-import com.ServStatusBot.repository.UrlRepository;
-import com.ServStatusBot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Component
 @RequiredArgsConstructor
 @PropertySource("classpath:application.yml")
+@EnableRetry
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
+
+    private final SSLVerificationDisabler sslVerificationDisabler;
 
     @Autowired
     private final UserService userService;
 
     @Autowired
-    private final UrlService urlService;
-
-    @Autowired
-    private final UserRepository userRepository;
-
-    @Autowired
-    private final UrlRepository urlRepository;
+    private final Utils utils;
 
     @Override
     public String getBotUsername() {
@@ -61,37 +60,19 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             long chatId = update.getMessage().getChatId();
             String command = update.getMessage().getText();
+            String name = update.getMessage().getChat().getFirstName();
+            var textList = Arrays.stream(update.getMessage().getText().split(" ")).toList();
+            var userUrl = textList.get(1);
+            long interval = Long.parseLong(textList.get(2));
 
             if (command.equals("старт")) {
                 sendMessage(chatId, "Введите добавить адрес интервал проверки в секундах");
-            } else if (command.contains("добавить")) {
-                if (userRepository.findByChatId(chatId).isEmpty()) {
-                    User user = new User();
-                    Url url = new Url();
-                    List<Url> urls = new ArrayList<>();
-                    url.setUrl(userText.get(1));
-                    url.setInterval(Long.valueOf(userText.get(2)));
-                    user.setChatId(update.getMessage().getChatId());
-                    user.setUserName(update.getMessage().getChat().getFirstName());
-                    urls.add(url);
-                    user.setUrls(urls);
-                    urlService.saveUrl(url);
-                    userService.saveUser(user);
 
-                } else {
-                    User currentUser = userRepository.findByChatId(chatId).get();
-                    List<Url> currentUserUrls = currentUser.getUrls();
-                    Url newUrl = new Url();
-                    newUrl.setUrl(userText.get(1));
-                    newUrl.setInterval(Long.valueOf(userText.get(2)));
-                    currentUserUrls.add(newUrl);
-                    currentUser.setUrls(currentUserUrls);
-                    urlService.saveUrl(newUrl);
-                    userService.saveUser(currentUser);
-                }
+            } else if (command.contains("добавить")) {
+                utils.createUserAndUrl(chatId, userUrl, name, interval, false);
 
             } else if (command.equals("показать")) {
-                List<Url> urls = userRepository.findByChatId(chatId).get().getUrls();
+                List<Url> urls = userService.findByChatId(chatId).getUrls();
                 Map<String, Long> result = new HashMap<>();
                 for (var url : urls) {
                     result.put(url.getUrl(), url.getInterval());
@@ -99,13 +80,16 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(chatId, String.valueOf(result));
 
             } else if (command.contains("проверить")) {
-                String url = userText.get(1);
-                isUrlWorks(chatId, url);
+                isUrlWorks(chatId, userUrl);
+
+            } else if (command.contains("следить")) {
+                utils.createUserAndUrl(chatId, userUrl, name, interval, true);
+                startMonitoring(interval, userUrl, chatId);
+
             } else {
                 sendMessage(chatId, "Ты пишешь какую-то дичь");
             }
         }
-
     }
 
     private void startCommandReceived(long chatId, String name) {
@@ -125,23 +109,51 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    private void isUrlWorks(long chatId, String url) throws IOException {
+    @SneakyThrows
+    private void isUrlWorks(long chatId, String url) {
 
         try {
-            URLConnection urlConnection = new URL(url).openConnection();
-            urlConnection.connect();
-            sendMessage(chatId, "WORKS");
+            sslVerificationDisabler.disableSSLVerification();
+            HttpsURLConnection connection = (HttpsURLConnection) new URL(url)
+                    .openConnection();
+            var responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                sendMessage(chatId, "НЕ ДОСТУПЕН!!!");
+            } else {
+                sendMessage(chatId, "РЕСУРС ДОСТУПЕН");
+            }
+
         } catch (final MalformedURLException e) {
             throw new IllegalStateException(e);
         } catch (final IOException e) {
-            sendMessage(chatId, "NOT WORKS");
+            sendMessage(chatId, "НЕ ДОСТУПЕН");
         }
     }
 
+    private void startMonitoring(long interval, String url, Long chatId) {
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            @SneakyThrows
+            public void run() {
+                try {
+                    sslVerificationDisabler.disableSSLVerification();
+                    HttpsURLConnection connection = (HttpsURLConnection) new URL(url)
+                            .openConnection();
+                    var responseCode = connection.getResponseCode();
+                    if (responseCode != 200) {
+                        sendMessage(chatId, "Сервис: " + url + " " + "НЕ ДОСТУПЕН!");
+                        wait(500);
+                        sendMessage(chatId, "Ожидание 5 мин");
+                        Thread.sleep(300000);
+                    }
 
-    public void addUrlToCheck(Long chatId) {
-
-
+                } catch (final IOException e) {
+                    sendMessage(chatId, "Ошибка " + url);
+                    timer.cancel();
+                }
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, interval * 1000);
     }
-
 }

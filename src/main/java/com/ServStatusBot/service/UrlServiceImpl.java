@@ -10,6 +10,7 @@ public class UrlServiceImpl implements UrlService {
 
     @Autowired
     private UrlRepository urlRepository;
+
     @Override
     public Url saveUrl(Url url) {
         return urlRepository.save(url);
