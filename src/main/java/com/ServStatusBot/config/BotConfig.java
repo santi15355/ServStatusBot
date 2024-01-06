@@ -14,4 +14,7 @@ public class BotConfig {
 
     @Value("${token}")
     String token;
+
+    @Value("${token_ai}")
+    String tokenAi;
 }

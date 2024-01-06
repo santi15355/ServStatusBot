@@ -5,6 +5,9 @@ import com.ServStatusBot.model.User;
 import com.ServStatusBot.service.UrlService;
 import com.ServStatusBot.service.UserService;
 import lombok.AllArgsConstructor;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -56,5 +59,20 @@ public class Utils {
             urlService.saveUrl(newUrl);
             userService.saveUser(currentUser);
         }
+    }
+    public String getGtpAnswer(StringBuilder response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response.toString());
+            JSONArray choicesArray = jsonObject.getJSONArray("choices");
+            if (!choicesArray.isEmpty()) {
+                JSONObject choice = choicesArray.getJSONObject(0);
+                JSONObject message = choice.getJSONObject("message");
+                return message.getString("content");
+            }
+        } catch (JSONException e) {
+            // Обработка ошибки парсинга JSON
+            e.printStackTrace();
+        }
+        return ""; // Возвращаем пустую строку, если нет данных или произошла ошибка
     }
 }

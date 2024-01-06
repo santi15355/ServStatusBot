@@ -1,5 +1,6 @@
 package com.ServStatusBot.service;
 
+import com.ServStatusBot.Ai.OpenAiModule;
 import com.ServStatusBot.Utils;
 import com.ServStatusBot.config.BotConfig;
 import com.ServStatusBot.config.SSLVerificationDisabler;
@@ -34,6 +35,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
 
+    private final OpenAiModule openAiModule;
+
     private final SSLVerificationDisabler sslVerificationDisabler;
 
     @Autowired
@@ -61,32 +64,37 @@ public class TelegramBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
             String command = update.getMessage().getText();
             String name = update.getMessage().getChat().getFirstName();
-            var textList = Arrays.stream(update.getMessage().getText().split(" ")).toList();
-            var userUrl = textList.get(1);
-            long interval = Long.parseLong(textList.get(2));
+//            var textList = Arrays.stream(update.getMessage().getText().split(" ")).toList();
+//            var userUrl = textList.get(1);
+//            long interval = Long.parseLong(textList.get(2));
 
             if (command.equals("старт")) {
-                sendMessage(chatId, "Введите добавить адрес интервал проверки в секундах");
+//                sendMessage(chatId, "Введите добавить адрес интервал проверки в секундах");
 
             } else if (command.contains("добавить")) {
-                utils.createUserAndUrl(chatId, userUrl, name, interval, false);
+//                utils.createUserAndUrl(chatId, userUrl, name, interval, false);
 
             } else if (command.equals("показать")) {
-                List<Url> urls = userService.findByChatId(chatId).getUrls();
-                Map<String, Long> result = new HashMap<>();
-                for (var url : urls) {
-                    result.put(url.getUrl(), url.getInterval());
-                }
-                sendMessage(chatId, String.valueOf(result));
+//                List<Url> urls = userService.findByChatId(chatId).getUrls();
+//                Map<String, Long> result = new HashMap<>();
+//                for (var url : urls) {
+//                    result.put(url.getUrl(), url.getInterval());
+//                }
+//                sendMessage(chatId, String.valueOf(result));
 
-            } else if (command.contains("проверить")) {
-                isUrlWorks(chatId, userUrl);
+//            } else if (command.contains("проверить")) {
+ //               isUrlWorks(chatId, userUrl);
 
             } else if (command.contains("следить")) {
-                utils.createUserAndUrl(chatId, userUrl, name, interval, true);
-                startMonitoring(interval, userUrl, chatId);
+//                startMonitoring(interval, userUrl, chatId);
+                sendMessage(chatId, "работаю");
 
-            } else {
+            } else if (command.startsWith("вопрос")) {
+                String message = update.getMessage().getText();
+                int spaceIndex = message.indexOf(' ');
+                sendMessage(chatId, openAiModule.getAnswerFromAi(message.substring(spaceIndex + 1)));
+            }
+            else {
                 sendMessage(chatId, "Ты пишешь какую-то дичь");
             }
         }
